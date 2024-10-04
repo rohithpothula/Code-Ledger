@@ -77,6 +77,39 @@ public class Main {
 //		memberStream.anyMatch((result) -> result.startsWith("N"));
 		String result6 = memberStream.filter(result -> result.startsWith("N")).findFirst().get();
 		System.out.println(result6);
+		
+//		This example is not related to streams but it worthy to know about it 
+		Integer a = 11;
+		Integer b = 11;
+		Integer c = 2000;
+		Integer d = 2000;
+//		Expectation is true and output is also true
+		System.out.println(a==b); 
+//		Expectation is true but the output is false
+		System.out.println(c==d);
+//		The reason for the above behaviour is because of object caching in java 
+//		generally the number from -127 to 128 are very much frequently used in java
+//		in order to increase the performace When a object is created with this value ranging from -127 to 128 
+//		the reference will be redirected to same object 
+//		and if the value is out of this range then new object will be created 
+		Integer a1 = new Integer(1000);
+		Integer b1 = new Integer(1000);
+		System.out.println(a1==b1);
+		
+		
+//		find the smallest element in list through streams
+		List<Integer> list3 = new ArrayList<>();
+		list3.add(222);
+		list3.add(23);
+		list3.add(297);
+		list3.add(2);
+		list3.add(79);
+		list3.add(98);
+		list3.add(100);
+		Optional<Integer> x = list3.stream().sorted((l,m)->{return m-l;}).skip(1).limit(1).findFirst();
+//		the above statement will find the second largest or second smallest element based 
+//		on the sorting order that we give in the sorted function 
+		System.out.println(x);
 	}
 
 }
