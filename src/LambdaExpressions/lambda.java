@@ -32,7 +32,7 @@ public class lambda {
 		
 		A a2 = () -> {System.out.println("This is way to do it through lambda expressions");};
 		
-//		(parameters) - > expression 
+//		(parameters) - > expression
 		
 		
 //		Now below we will deal with complete different way

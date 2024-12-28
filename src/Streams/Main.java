@@ -3,12 +3,20 @@ package Streams;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.commons.codec.binary.Hex;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.security.SecureRandom;
 public class Main {
 
 	public static void main(String[] args) {
@@ -25,7 +33,9 @@ public class Main {
 //		ways to create Streams
 		Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
 //		stream.forEach(x -> System.out.println(x));
-
+		
+		
+		Predicate<Integer> isEven = (n) -> n%2==0;
 		List<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < 10; i++) {
 			list.add(i);
@@ -110,6 +120,51 @@ public class Main {
 //		the above statement will find the second largest or second smallest element based 
 //		on the sorting order that we give in the sorted function 
 		System.out.println(x);
+		
+		List <Employee> employeeList = new ArrayList<>();
+		Employee e1 = new Employee("Rohith", "Reddy", 90000000, "rohith@gmail.com");
+		Employee e2 = new Employee("shiva", "Reddy", 999000, "shiva@gmail.com");
+		Employee e3 = new Employee("prakash", "Reddy", 99000, "prakash@gmail.com");
+		Employee e4 = new Employee("maitrayee", "Reddy", 99000, "maitrayee@gmail.com");
+		Employee e5 = new Employee("nagesh", "Reddy", 99999000, "nagesh@gmail.com");
+		Employee e6 = new Employee("Rohith", "Reddy", 900000099, "rohith@gmail.com");
+		
+		employeeList.add(e1);
+		employeeList.add(e2);
+		employeeList.add(e3);
+		employeeList.add(e4);
+		employeeList.add(e5);
+		employeeList.add(e6);
+//		order the employees based on salary and then based on employee first name and then the reverse -- just kept on adding the filtering to know about stuff 
+		employeeList.stream().sorted(Comparator.comparing(Employee::getSalary).thenComparing(Employee::getFirstName).reversed()).forEach(e -> System.out.println(e.getFirstName()));
+//		find an empployee who name is Rohith and among those find the largest salary
+		employeeList.stream().filter(e -> "Rohith".equals(e.getFirstName())).max(Comparator.comparing(Employee::getSalary)).ifPresent(e -> System.out.println(e.getFirstName()+" "+e.getSalary()));
+		
+		
+//		https://rathod-ajay.medium.com/top-30-java-8-interview-questions-answers-to-ace-your-java-interview-includes-coding-questions-d19fbd4510cd
+//		the above is very good article for streams java questions to practice	
+			
+			
+//	find the avarage of salary of all employess           // todo
+//		employeeList.stream().collect(Collectors.)
+
+
+//		        String url = "jdbc:sqlserver://BLRLB80H6G3:1433;instanceName=SA;DatabaseName=QNBV5;encrypt=true;trustServerCertificate=true;";
+//		        try {
+//		            Connection conn = DriverManager.getConnection(url);
+//		            System.out.println("Connection successful!");
+//		        } catch (SQLException e) {
+//		            e.printStackTrace();
+//		        }
+		        
+		        SecureRandom random = new SecureRandom();
+//		        byte[] salt = new byte[16]; // 16 bytes = 128 bits
+		        byte[] salt = new byte[16]; // 16 bytes = 128 bits
+		        random.nextBytes(salt);
+		        String saltValue = Hex.encodeHexString(salt);
+		        System.out.println("Generated Salt: " + saltValue);
+		
+		
 	}
 
 }
