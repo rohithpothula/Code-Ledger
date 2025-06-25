@@ -3,13 +3,18 @@ package Streams;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.codec.binary.Hex;
 
@@ -34,13 +39,18 @@ public class Main {
 		Stream<Integer> stream = Stream.of(1, 2, 3, 4, 5, 6, 7, 8, 9);
 //		stream.forEach(x -> System.out.println(x));
 		
-		
 		Predicate<Integer> isEven = (n) -> n%2==0;
+		
 		List<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < 10; i++) {
 			list.add(i);
 		}
-		Stream<Integer> stream1 = list.stream();
+		
+		List<Integer> list3 = numbers.stream()
+                .filter(isEven)
+                .collect(Collectors.toList());
+		
+//		Stream<Integer> stream1 = list.stream();
 //		stream.forEachOrdered(x -> System.out.println(x));
 
 		Stream<Integer> stream3 = Stream.generate(() -> (new Random().nextInt(100)));
@@ -52,6 +62,7 @@ public class Main {
 		for (int i = 0; i < 10; i++) {
 			list1.add(i);
 		}
+		
 		Stream<Integer> stream2 = list1.stream();
 //		List<Integer> evennumberlist2 = stream2.filter(y -> y%2==0).collect(Collectors.toList());
 
@@ -66,6 +77,7 @@ public class Main {
 		memberNames.add("Nagesh");
 		memberNames.add("Suvarna");
 		memberNames.add("prakash");
+		
 		Stream<String> memberStream = memberNames.stream();
 		String s = "asdfsadf";
 //		memberStream.filter(result -> result.startsWith("R")).forEach(x -> System.out.println(x));
@@ -108,7 +120,7 @@ public class Main {
 		
 		
 //		find the smallest element in list through streams
-		List<Integer> list3 = new ArrayList<>();
+		List<Integer> list31 = new ArrayList<>();
 		list3.add(222);
 		list3.add(23);
 		list3.add(297);
@@ -116,10 +128,11 @@ public class Main {
 		list3.add(79);
 		list3.add(98);
 		list3.add(100);
-		Optional<Integer> x = list3.stream().sorted((l,m)->{return m-l;}).skip(1).limit(1).findFirst();
+//		Optional<Integer> x = list3.stream().sorted((l,m)->{return m-l;}).skip(1).limit(1).findFirst();
+		Optional<Integer> y = list3.stream().sorted().skip(1).limit(1).findFirst();
 //		the above statement will find the second largest or second smallest element based 
 //		on the sorting order that we give in the sorted function 
-		System.out.println(x);
+		System.out.println(y);
 		
 		List <Employee> employeeList = new ArrayList<>();
 		Employee e1 = new Employee("Rohith", "Reddy", 90000000, "rohith@gmail.com");
@@ -135,11 +148,13 @@ public class Main {
 		employeeList.add(e4);
 		employeeList.add(e5);
 		employeeList.add(e6);
+		
 //		order the employees based on salary and then based on employee first name and then the reverse -- just kept on adding the filtering to know about stuff 
 		employeeList.stream().sorted(Comparator.comparing(Employee::getSalary).thenComparing(Employee::getFirstName).reversed()).forEach(e -> System.out.println(e.getFirstName()));
 //		find an empployee who name is Rohith and among those find the largest salary
 		employeeList.stream().filter(e -> "Rohith".equals(e.getFirstName())).max(Comparator.comparing(Employee::getSalary)).ifPresent(e -> System.out.println(e.getFirstName()+" "+e.getSalary()));
 		
+//		Optional<Employee> list11 = employeeList.stream().filter(m -> m.getFirstName().contains("h")).toList();
 		
 //		https://rathod-ajay.medium.com/top-30-java-8-interview-questions-answers-to-ace-your-java-interview-includes-coding-questions-d19fbd4510cd
 //		the above is very good article for streams java questions to practice	
@@ -157,12 +172,76 @@ public class Main {
 //		            e.printStackTrace();
 //		        }
 		        
-		        SecureRandom random = new SecureRandom();
+//		        SecureRandom random = new SecureRandom();
+////		        byte[] salt = new byte[16]; // 16 bytes = 128 bits
 //		        byte[] salt = new byte[16]; // 16 bytes = 128 bits
-		        byte[] salt = new byte[16]; // 16 bytes = 128 bits
-		        random.nextBytes(salt);
-		        String saltValue = Hex.encodeHexString(salt);
-		        System.out.println("Generated Salt: " + saltValue);
+//		        random.nextBytes(salt);
+//		        String saltValue = Hex.encodeHexString(salt);
+//		        System.out.println("Generated Salt: " + saltValue);
+		
+		
+		
+		
+		Map<Integer,String> map = new HashMap<Integer,String>();
+		
+		map.put(1, "Shiva");
+		map.put(2,"ROhtih");
+		
+		Map<Integer,String> map_con = new ConcurrentHashMap<Integer,String>();
+		map_con.put(2, "skjdfh");
+		map_con.put(4, "kkkk");
+		
+//		map_con.put(6, null);
+		
+		List<Integer> IntegerList = Arrays.asList(11,20,30,40);
+		
+		IntegerList.stream().filter(n-> n%2==0).map(n-> n*n).collect(Collectors.toList()).forEach(x-> System.out.println(x));
+		
+		List<String> listof_Strings = Arrays.asList("Rohith","Shiva","Ram","Ram","Ram");
+		Stream<String>  streamers= listof_Strings.stream().filter((String val) -> val.length()<=3).peek((String val) -> System.out.println(val));
+		
+		
+//		Intermediate Operations are lazy operations
+		System.out.println("***********");
+		long c1 = streamers.count();
+		System.out.print(c1);
+		
+		
+		List<Integer> numbers3 = Arrays.asList(1,2,3,4,5,6,7,8);
+		numbers3.stream().filter((Integer n) -> n%2==0)
+						.peek((Integer n) -> System.out.println("After Filter :" + n))
+						.map((Integer n) -> n*n)
+						.peek((Integer n) -> System.out.println("After map :" + n))
+						.sorted(Comparator.reverseOrder())
+						.peek((Integer n) -> System.out.println("After Sorted "+n));
+		int[] nums = {1,2,3,4,5,6,7,8,9};
+		int n = nums.length;
+		Map<Integer,Integer> m = new ConcurrentHashMap<Integer, Integer>();
+		for(int i=0;i<n;i++) {
+			if(m.containsKey(nums[i])) {
+				m.put(nums[i], m.get(nums[i]));
+			}
+			else {
+				m.put(nums[i], 1);
+			}
+		}
+		int k = 0;
+		Map <Integer,Integer> m1 = Collections.synchronizedMap(new HashMap<>());
+		
+		int ans = 0;
+		for(Map.Entry<Integer, Integer> map_entry : m.entrySet()) {
+			int temp_key_1 = map_entry.getKey();
+			int temp_key_2 = k-temp_key_1;
+			if(temp_key_1!=temp_key_2) {
+			    int value = m.get(temp_key_2) == null ? 0 : m.get(temp_key_2);
+				ans = ans + Math.min(value, map_entry.getValue());
+			}
+			else {
+				int value = m.get(temp_key_2) == null ? 0 : m.get(temp_key_2);
+				ans = ans + Math.min(map_entry.getValue(), m.get(temp_key_2))/2;
+			}
+			map_entry.setValue(0);
+		}
 		
 		
 	}
